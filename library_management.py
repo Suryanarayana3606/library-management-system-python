@@ -2,11 +2,11 @@ class Book:
     def __init__(self, title, author):
         self.title = title
         self.author = author
-        self.is_lent = False
-        self.lent_to = None  # (name, id)
+        self.is_borrowed = False
+        self.borrowed_by = None  # (name, id)
 
     def __str__(self):
-        status = f"Lent to {self.lent_to[0]} (ID: {self.lent_to[1]})" if self.is_lent else "Available"
+        status = f"Lent to {self.borrowed_by[0]} (ID: {self.borrowed_by[1]})" if self.is_borrowed else "Available"
         return f"{self.title} by {self.author} - {status}"
 
 
@@ -30,11 +30,11 @@ class Library:
         name = name.strip()
         for member in self.members:
             if member.name.lower() == name.lower():
-                print("❗ This person is already a member.")
+                print("This person is already a member.")
                 return
         member = Member(name, self.next_member_id)
         self.members.append(member)
-        print(f"✅ Member {member.name} registered with ID {member.id}")
+        print(f"Member {member.name} registered with ID {member.id}")
         self.next_member_id += 1
 
     def get_member(self, name, member_id):
@@ -46,55 +46,55 @@ class Library:
 
     def add_book(self, title, author):
         self.books.append(Book(title.strip(), author.strip()))
-        print(f"📘 Book {title} by {author} is added...")
+        print(f"Book {title} by {author} is added...")
 
     def display_books(self):
         if not self.books:
-            print("📚 No books in the library.")
+            print("No books in the library.")
         else:
-            print("\n📚 Books in the library:")
+            print("\n Books in the library:")
             for idx, book in enumerate(self.books, 1):
                 print(f"{idx}. {book}")
 
     def lend_book(self, title, name, member_id):
         member = self.get_member(name, member_id)
         if not member:
-            print("❌ You are not a member of this library.")
+            print("You are not a member of this library.")
             return
 
         for book in self.books:
             if book.title.lower() == title.strip().lower():
-                if not book.is_lent:
-                    book.is_lent = True
-                    book.lent_to = (member.name, member.id)
-                    print(f"📕 Book '{book.title}' lent to {member}.")
+                if not book.is_borrowed:
+                    book.is_borrowed = True
+                    book.borrowed_by = (member.name, member.id)
+                    print(f"Book '{book.title}' lent to {member}.")
                 else:
-                    print(f"❌ Book already lent to {book.lent_to[0]} (ID: {book.lent_to[1]}).")
+                    print(f"Book already lent to {book.borrowed_by[0]} (ID: {book.borrowed_by[1]}).")
                 return
-        print("❌ Book not found...")
+        print("Book not found...")
 
     def return_book(self, title, name, member_id):
         member = self.get_member(name, member_id)
         if not member:
-            print("❌ You are not a member of this library.")
+            print("You are not a member of this library.")
             return
 
         for book in self.books:
             if book.title.lower() == title.strip().lower():
-                if book.is_lent and book.lent_to == (member.name, member.id):
-                    book.is_lent = False
-                    book.lent_to = None
-                    print(f"📗 Book '{book.title}' returned by {member}.")
-                elif book.is_lent:
-                    print(f"❌ This book was lent to someone else: {book.lent_to[0]} (ID: {book.lent_to[1]}).")
+                if book.is_borrowed and book.borrowed_by == (member.name, member.id):
+                    book.is_borrowed = False
+                    book.borrowed_by = None
+                    print(f"Book '{book.title}' returned by {member}.")
+                elif book.is_borrowed:
+                    print(f"This book was lent to someone else: {book.borrowed_by[0]} (ID: {book.borrowed_by[1]}).")
                 else:
-                    print("❌ This book is not currently lent out.")
+                    print("This book is not currently lent out.")
                 return
-        print("❌ Book not found...")
+        print("Book not found...")
 
 
 def main():
-    library = Library("FusionTech Library")
+    library = Library("Library")
 
     while True:
         print("\n--- Library Menu ---")
@@ -132,11 +132,11 @@ def main():
             library.return_book(title, name, member_id)
 
         elif choice == '6':
-            print("👋 Exiting... Thank you for using the library system.")
+            print("Exiting... Thank you for using the library system.")
             break
 
         else:
-            print("❗ Invalid choice. Enter a number from 1 to 6.")
+            print("Invalid choice. Enter a number from 1 to 6.")
 
 
 if __name__ == "__main__":
